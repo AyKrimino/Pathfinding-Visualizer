@@ -1,0 +1,14 @@
+# .gitignore
+
+# Virtual environment
+venv/
+__pycache__/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
