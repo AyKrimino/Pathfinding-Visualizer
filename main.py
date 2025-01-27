@@ -1,41 +1,38 @@
-import pygame
-from global_constants import (SCREEN_WIDTH, SCREEN_HEIGHT, GRID_ROWS, GRID_COLS, CELL_SIZE, WHITE, GRAY, FPS)
+import pygame 
+from global_constants import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, FPS
+from grid import Grid
+from input_handler import InputHandler
 
 
-def draw_grid(screen):
-    grid_width = GRID_COLS * CELL_SIZE
-    grid_height = GRID_ROWS * CELL_SIZE
-
-    x_offset = (SCREEN_WIDTH - grid_width) // 2
-    y_offset = (SCREEN_HEIGHT - grid_height) // 2
+class App:
+    def __init__(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption("Pathfinding Visualizer")
+        self.clock = pygame.time.Clock()
+        self.grid = Grid()
+        self.running = True
     
-    for row in range(GRID_ROWS):
-        for col in range(GRID_COLS):
-            rect = pygame.Rect(
-                x_offset + col * CELL_SIZE,
-                y_offset + row * CELL_SIZE,
-                CELL_SIZE,
-                CELL_SIZE,
-            )
-            pygame.draw.rect(screen, GRAY, rect, 2)
-
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Pathfinding Visualizer")
-    clock = pygame.time.Clock()
-    
-    running = True
-    while running:
+    def run(self):
+        """Main application loop."""
+        while self.running:
+            self._handle_events()
+            self._update_screen()
+            
+    def _handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-        
-        screen.fill(WHITE)
-        draw_grid(screen)
+                self.running = False 
+            InputHandler.handle_mouse(self.grid, event, SCREEN_WIDTH, SCREEN_HEIGHT)
+            InputHandler.handle_keyboard(self.grid)
 
+    def _update_screen(self):
+        self.screen.fill(WHITE)
+        self.grid.draw(self.screen)
         pygame.display.flip()
-        clock.tick(FPS)
+        self.clock.tick(FPS)
+
 
 if __name__ == "__main__":
-    main()
+    app = App()
+    app.run()
