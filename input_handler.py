@@ -39,6 +39,21 @@ class InputHandler:
         """Handles keyboard input to reset the grid."""
         keys = pygame.key.get_pressed()
         mods = pygame.key.get_mods()
+
+        # Clear grid
         if keys[pygame.K_c] and mods & pygame.KMOD_CTRL:
             grid.initialize()
+
+        # Algorithm selection
+        if keys[pygame.K_1] and mods & pygame.KMOD_CTRL:  # BFS Algorithm
+            grid.change_selected_algorithm(0)
+        if keys[pygame.K_2] and mods & pygame.KMOD_CTRL:  # DFS Algorithm
+            grid.change_selected_algorithm(1)
+        if keys[pygame.K_3] and mods & pygame.KMOD_CTRL:  # A* Algorithm
+            grid.change_selected_algorithm(2)
+
+        # Run the path finding
+        if keys[pygame.K_r] and mods & pygame.KMOD_CTRL: 
+            if grid.is_valid():
+                print("run")
 

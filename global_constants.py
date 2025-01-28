@@ -17,3 +17,6 @@ PURPLE = (128, 0, 128)
 
 # Frames per second (FPS)
 FPS = 60
+
+# Algorithms
+ALGORITHMS = ("BFS", "DFS", "A*",)
