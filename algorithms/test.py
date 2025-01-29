@@ -1,6 +1,6 @@
 import unittest
-from dfs import dfs
-from constants import DIRECTIONS
+from .dfs import dfs
+from .constants import DIRECTIONS
 
 class TestPathfindingAlgorithms(unittest.TestCase):
     def test_dfs(self):
@@ -27,7 +27,3 @@ class TestPathfindingAlgorithms(unittest.TestCase):
             r1, c1 = visited_nodes[i - 1]
             r2, c2 = visited_nodes[i]
             self.assertIn((r2 - r1, c2 - c1), DIRECTIONS)
-
-
-if __name__ == "__main__":
-    unittest.main()
