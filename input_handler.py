@@ -54,6 +54,4 @@ class InputHandler:
 
         # Run the path finding
         if keys[pygame.K_r] and mods & pygame.KMOD_CTRL: 
-            if grid.is_valid():
-                print("run")
-
+            grid.run()

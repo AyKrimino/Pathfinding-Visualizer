@@ -1,10 +1,12 @@
 import pygame
-from global_constants import (SCREEN_WIDTH, SCREEN_HEIGHT, GRID_ROWS, GRID_COLS, CELL_SIZE, WHITE, GRAY, RED, BLACK, GREEN, ALGORITHMS)
+from global_constants import (SCREEN_WIDTH, SCREEN_HEIGHT, GRID_ROWS, GRID_COLS, CELL_SIZE, WHITE, GRAY, RED, BLACK, GREEN, BLUE, ALGORITHMS)
+from algorithms.dfs import dfs
 
 class Grid:
     def __init__(self):
         self.grid = [[0 for _ in range(GRID_COLS)] for _ in range(GRID_ROWS)]
-        self.selected_algorithm = ALGORITHMS[0]  # Default Algorith (BFS)
+        self.selected_algorithm = ALGORITHMS[0]  # Default Algorithm (BFS)
+        self.start_node_indices = (-1, -1)
         
     def initialize(self):
         """Clears the grid by settings all cells to 0."""
@@ -20,7 +22,15 @@ class Grid:
                     self.grid[row][col] = 0
                     return
 
+    def remove_previous_path(self):
+        """Removes nodes who have -1 value"""
+        for row in range(GRID_ROWS):
+            for col in range(GRID_COLS):
+                if self.grid[row][col] == -1:
+                    self.grid[row][col] = 0
+
     def change_selected_algorithm(self, index):
+        """Changes the pathfinding algorithm selected by user"""
         try:
             self.selected_algorithm = ALGORITHMS[index]
         except IndexError:
@@ -34,6 +44,20 @@ class Grid:
                 if self.grid[row][col] == 1 or self.grid[row][col] == 2:
                     nbr += 1
         return nbr == 2
+
+    def run(self):
+        """Runs the selected pathfinding algorithm with animations."""
+        self.remove_previous_path()
+        if not self.is_valid():
+            print("Invalid grid: Ensure you have both start and goal nodes.")
+            return
+
+        visited_nodes = dfs(self.grid, *self.start_node_indices)
+        for _ in visited_nodes:
+            pygame.time.delay(50)
+            pygame.display.get_surface().fill(WHITE)
+            self.draw(pygame.display.get_surface())
+            pygame.display.flip()
 
     def draw(self, screen):
         """Draws the grid on the screen."""
@@ -55,11 +79,14 @@ class Grid:
                 if self.grid[row][col] == 0:
                     color = WHITE
                 elif self.grid[row][col] == 1:
+                    self.start_node_indices = (row, col)
                     color = GREEN
                 elif self.grid[row][col] == 2:
                     color = RED
                 elif self.grid[row][col] == 3:
                     color = BLACK
+                else:
+                    color = BLUE
 
                 pygame.draw.rect(screen, color, rect)
                 pygame.draw.rect(screen, GRAY, rect, 2)
