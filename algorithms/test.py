@@ -1,5 +1,6 @@
 import unittest
 from .dfs import dfs
+from .bfs import bfs
 from .constants import DIRECTIONS
 
 class TestPathfindingAlgorithms(unittest.TestCase):
@@ -27,3 +28,22 @@ class TestPathfindingAlgorithms(unittest.TestCase):
             r1, c1 = visited_nodes[i - 1]
             r2, c2 = visited_nodes[i]
             self.assertIn((r2 - r1, c2 - c1), DIRECTIONS)
+
+    def test_bfs(self):
+        grid = [
+            [0, 0, 0, 0, 0, 2],
+            [0, 3, 3, 3, 3, 3],
+            [0, 3, 0, 3, 0, 0],
+            [0, 3, 0, 3, 0, 0],
+            [0, 0, 0, 3, 3, 0],
+            [1, 0, 0, 0, 0, 0]
+        ]
+
+        visited_nodes = list(bfs(grid, 5, 0))
+
+        # Check if the goal was reached
+        self.assertIn((0, 5), visited_nodes)
+
+        # Ensure all visited nodes are valid (not walls)
+        for r, c in visited_nodes:
+            self.assertNotEqual(grid[r][c], 3)

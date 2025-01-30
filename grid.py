@@ -1,12 +1,17 @@
 import pygame
-from global_constants import (SCREEN_WIDTH, SCREEN_HEIGHT, GRID_ROWS, GRID_COLS, CELL_SIZE, WHITE, GRAY, RED, BLACK, GREEN, BLUE, ALGORITHMS)
+from global_constants import (SCREEN_WIDTH, SCREEN_HEIGHT, GRID_ROWS, GRID_COLS, CELL_SIZE, WHITE, GRAY, RED, BLACK, GREEN, BLUE) 
 from algorithms.dfs import dfs
+from algorithms.bfs import bfs
 
 class Grid:
     def __init__(self):
         self.grid = [[0 for _ in range(GRID_COLS)] for _ in range(GRID_ROWS)]
-        self.selected_algorithm = ALGORITHMS[0]  # Default Algorithm (BFS)
+        self.selected_algorithm = 0  # Default Algorithm (BFS)
         self.start_node_indices = (-1, -1)
+        self.algorithms = {
+            0: bfs,
+            1: dfs,
+        }
         
     def initialize(self):
         """Clears the grid by settings all cells to 0."""
@@ -31,10 +36,7 @@ class Grid:
 
     def change_selected_algorithm(self, index):
         """Changes the pathfinding algorithm selected by user"""
-        try:
-            self.selected_algorithm = ALGORITHMS[index]
-        except IndexError:
-            raise Exception("algorithms indices are between 0 and 2.")
+        self.selected_algorithm = index
     
     def is_valid(self):
         """Check validation for the grid (start node and goal node should be there)"""
@@ -52,7 +54,7 @@ class Grid:
             print("Invalid grid: Ensure you have both start and goal nodes.")
             return
 
-        visited_nodes = dfs(self.grid, *self.start_node_indices)
+        visited_nodes = self.algorithms[self.selected_algorithm](self.grid, *self.start_node_indices)
         for _ in visited_nodes:
             pygame.time.delay(50)
             pygame.display.get_surface().fill(WHITE)
