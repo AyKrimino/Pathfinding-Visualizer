@@ -8,6 +8,7 @@ class Grid:
         self.grid = [[0 for _ in range(GRID_COLS)] for _ in range(GRID_ROWS)]
         self.selected_algorithm = 0  # Default Algorithm (BFS)
         self.start_node_indices = (-1, -1)
+        self.goal_node_indices = (-1, -1)
         self.algorithms = {
             0: bfs,
             1: dfs,
@@ -84,6 +85,7 @@ class Grid:
                     self.start_node_indices = (row, col)
                     color = GREEN
                 elif self.grid[row][col] == 2:
+                    self.goal_node_indices = (row, col)
                     color = RED
                 elif self.grid[row][col] == 3:
                     color = BLACK
